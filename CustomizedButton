@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+
+enum ButtonType { primary, secondary }
+
+class CustomButton extends StatelessWidget {
+  const CustomButton({
+    Key? key,
+    this.title,
+    this.child,
+    required this.type,
+    required this.onTap,
+    this.disabledColor,
+    this.color,
+    this.height = 50,
+    this.isLoading = false,
+    this.radius,
+  })  : assert(title == null || child == null,
+            'Cannot provide both a games and a isAll\n'),
+        super(key: key);
+
+  ///Button Title text
+  final String? title;
+
+  ///Button Title text
+  final Widget? child;
+
+  ///Button Type i.e. Primary or Secondary or Ternary
+  final ButtonType type;
+
+  ///Button isLoading if provided true will disable click on button and circular progress indicator will be visible
+  final bool isLoading;
+
+  ///Button buttonDisabled Color
+  final Color? disabledColor;
+
+  ///Button Color
+  final Color? color;
+
+  ///Button Height
+  final double? height;
+
+  ///Button Radius
+  final double? radius;
+
+  ///Button onTap()
+  final Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: isLoading ? null : onTap,
+      height: height,
+      minWidth: 80,
+      elevation: 0,
+      focusElevation: 0,
+      highlightElevation: 0,
+      disabledElevation: 0,
+      hoverElevation: 0,
+      color: type == ButtonType.secondary
+          ? color ?? Colors.transparent
+          : color ?? Theme.of(context).primaryColor,
+      disabledColor: disabledColor ?? Colors.grey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius ?? 12),
+        side: type == ButtonType.secondary
+            ? BorderSide(color: Theme.of(context).primaryColor)
+            : BorderSide.none,
+      ),
+      child: Center(
+        child: Builder(builder: (context) {
+          if (isLoading) {
+            return CircularProgressIndicator(
+              color: type == ButtonType.primary
+                  ? color ?? Colors.white
+                  : Theme.of(context).primaryColor,
+              strokeWidth: 2,
+            );
+          }
+
+          return child ??
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                child: Text(
+                  title!,
+                  style: TextStyle(
+                      color: type == ButtonType.secondary
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700),
+                ),
+              );
+        }),
+      ),
+    );
+  }
+}
